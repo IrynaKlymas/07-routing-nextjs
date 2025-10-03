@@ -1,3 +1,3 @@
-06-notehub-nextjs
+07-routing-nextjs
 
-1. Module 1. Introduction to Next.js and Routing
+2. Module 2. Advanced Routing

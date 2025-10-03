@@ -1,10 +1,9 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { fetchNotes } from "@/lib/api";
 import NoteList from "@/components/NoteList/NoteList";
 import SearchBox from "@/components/SearchBox/SearchBox";
@@ -12,9 +11,8 @@ import Pagination from "@/components/Pagination/Pagination";
 import Modal from "@/components/Modal/Modal";
 import NoteForm from "@/components/NoteForm/NoteForm";
 import css from "./NotesPage.module.css";
-import { Toaster } from "react-hot-toast";
 
-const NotesClient = () => {
+const NotesClient = ({ tag }: { tag: string }) => {
     const [page, setPage] = useState<number>(1);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -22,11 +20,11 @@ const NotesClient = () => {
 
     useEffect(() => {
         setPage(1);
-    }, [debouncedQuery]);
+    }, [debouncedQuery, tag]);
 
-    const { data: notesData } = useQuery({
-        queryKey: ["notes", page, debouncedQuery],
-        queryFn: () => fetchNotes({ page, query: debouncedQuery }),
+    const { data: notesData, isLoading } = useQuery({
+        queryKey: ["notes", page, debouncedQuery, tag],
+        queryFn: () => fetchNotes({ page, query: debouncedQuery, tag }),
         placeholderData: keepPreviousData,
     });
 
@@ -41,7 +39,7 @@ const NotesClient = () => {
     const handleDeleted = () => toast.success("Note deleted successfully!");
 
     return (
-        <div className={css.app}>
+        <div>
             <Toaster position="top-right" />
             <header className={css.toolbar}>
                 <SearchBox value={searchQuery} onChange={setSearchQuery} />
@@ -57,7 +55,8 @@ const NotesClient = () => {
                 </button>
             </header>
             <main>
-                {notesData && notesData.notes.length > 0 && (
+                {isLoading && <p>Loading notes...</p>}
+                {notesData && (
                     <NoteList
                         notes={notesData.notes}
                         onDeleted={handleDeleted}

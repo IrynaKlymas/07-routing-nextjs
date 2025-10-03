@@ -36,7 +36,6 @@ interface NoteFormProps {
     onCancel: () => void;
     onCreated?: (note: Note) => void;
 }
-
 const NoteForm = ({ onCancel, onCreated }: NoteFormProps) => {
     const queryClient = useQueryClient();
 

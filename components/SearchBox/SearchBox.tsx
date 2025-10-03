@@ -1,4 +1,3 @@
-
 "use client";
 
 import css from "./SearchBox.module.css";
@@ -8,9 +7,7 @@ interface SearchBoxProps {
     onChange: (newValue: string) => void;
 }
 
-
 const SearchBox = ({ value, onChange }: SearchBoxProps) => {
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
     };
